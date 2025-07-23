@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo API Web Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-no-token {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-no-token:hover {
+            background-color: #c82333;
+        }
+        .btn-with-token {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-with-token:hover {
+            background-color: #218838;
+        }
+        .result-container {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        .result-content {
+            font-family: monospace;
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 3px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+        .token-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .info-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e7f3ff;
+            border-radius: 5px;
+        }
+        .status-success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Demo API Web Client</h1>
+        
+        <div class="info-section">
+            <h3>Test OAuth2 Token Validation</h3>
+            <p>This web client demonstrates calling the Demo API with and without authentication tokens.</p>
+            <ul>
+                <li><strong>No Token:</strong> Should return 401 Unauthorized</li>
+                <li><strong>With Token:</strong> Acquires token from OAuth2 provider and calls API</li>
+            </ul>
+        </div>
+
+        <div class="button-container">
+            <form th:action="@{/call-without-token}" method="post" style="display: inline;">
+                <button type="submit" class="btn-no-token">
+                    🚫 Call API with No Token
+                </button>
+            </form>
+            
+            <form th:action="@{/call-with-token}" method="post" style="display: inline;">
+                <button type="submit" class="btn-with-token">
+                    🔑 Call API with Token
+                </button>
+            </form>
+        </div>
+
+        <div th:if="${lastAction}" class="result-container">
+            <div class="result-title">Last Action: <span th:text="${lastAction}"></span></div>
+        </div>
+
+        <div th:if="${token}" class="result-container">
+            <div class="result-title">Token Information:</div>
+            <div class="result-content token-info" th:text="${token}"></div>
+        </div>
+
+        <div th:if="${result}" class="result-container">
+            <div class="result-title">API Response:</div>
+            <div class="result-content" th:text="${result}"></div>
+            <div class="token-info">
+                <span th:if="${result.contains('Issuer:')}" class="status-success">✅ TOKEN VALIDATED</span>
+                <span th:if="${result.contains('401 Unauthorized')}" class="status-error">❌ UNAUTHORIZED</span>
+                <span th:if="${result.contains('Error')}" class="status-error">❌ ERROR</span>
+            </div>
+        </div>
+
+        <div class="info-section" style="margin-top: 30px; font-size: 14px;">
+            <h4>Configuration:</h4>
+            <ul>
+                <li>Demo API running on: <code>http://localhost:8081</code></li>
+                <li>Web Client running on: <code>http://localhost:8082</code></li>
+                <li>OAuth2 Provider: Check application.properties</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

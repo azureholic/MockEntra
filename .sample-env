@@ -1,0 +1,35 @@
+# Generic OAuth2 Configuration
+# For Keycloak: Use your Keycloak realm's token endpoint
+# For Entra ID: Use your Azure AD tenant's OAuth2 token endpoint
+TOKEN_ENDPOINT=<your-oauth2-token-endpoint>
+
+# Application Client ID
+# For Keycloak: Your client ID from the realm
+# For Entra ID: Your registered application's client ID
+CLIENT_ID=<your-application-client-id>
+
+# Application Client Secret
+# For Keycloak: Your client secret from the realm
+# For Entra ID: Your application's client secret
+CLIENT_SECRET=<your-application-client-secret>
+
+# OAuth2 Scope
+# For Keycloak: Your custom scope (e.g., api-access)
+# For Entra ID: Your API scope or .default (e.g., api://your-api/.default)
+SCOPE=<your-api-scope>
+
+# Generic JWT Validation Configuration
+# Token Issuer URL
+# For Keycloak: http://localhost:8080/realms/your-realm-name
+# For Entra ID: https://sts.windows.net/your-tenant-id/
+VALID_TOKEN_ISSUER=<your-token-issuer-url>
+
+# API Audience Identifier
+# For Keycloak: Your API identifier (e.g., demo-api)
+# For Entra ID: Your API audience (e.g., api://your-api.domain.com)
+VALID_AUDIENCE=<your-api-audience-identifier>
+
+# JWT Key Set URI for token validation
+# For Keycloak: http://keycloak:8080/realms/your-realm-name/protocol/openid-connect/certs
+# For Entra ID: https://login.microsoftonline.com/your-tenant-id/discovery/v2.0/keys
+JWK_SET_URI=<your-jwks-endpoint>

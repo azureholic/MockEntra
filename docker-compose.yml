@@ -1,0 +1,85 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: dev-file
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+    ports:
+      - "8080:8080"
+    command:
+      - start-dev
+      - --import-realm
+    volumes:
+      - ./realm-config:/opt/keycloak/data/import
+      - keycloak_data:/opt/keycloak/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - mock-entra-network
+
+  demo-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: demo-api
+    environment:
+      - SERVER_PORT=8081
+      # Generic JWT Validation Configuration
+      - VALID_TOKEN_ISSUER=${VALID_TOKEN_ISSUER}
+      - VALID_AUDIENCE=${VALID_AUDIENCE}
+      - JWK_SET_URI=${JWK_SET_URI}
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - mock-entra-network
+
+  webclient:
+    build:
+      context: ./webclient
+      dockerfile: Dockerfile
+    container_name: webclient
+    environment:
+      - SERVER_PORT=8082
+      # Generic OAuth2 Configuration
+      - TOKEN_ENDPOINT=${TOKEN_ENDPOINT}
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - SCOPE=${SCOPE}
+      # API settings
+      - DEMO_API_BASE_URL=http://demo-api:8081
+    ports:
+      - "8082:8082"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - mock-entra-network
+
+networks:
+  mock-entra-network:
+    driver: bridge
+
+volumes:
+  keycloak_data:
