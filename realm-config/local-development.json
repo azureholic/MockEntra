@@ -3,56 +3,28 @@
   "enabled": true,
   "displayName": "Local Development",
   "accessTokenLifespan": 300,
-  "accessTokenLifespanForImplicitFlow": 900,
-  "ssoSessionIdleTimeout": 1800,
-  "ssoSessionMaxLifespan": 36000,
-  "offlineSessionIdleTimeout": 2592000,
-  "accessCodeLifespan": 60,
-  "accessCodeLifespanUserAction": 300,
-  "accessCodeLifespanLogin": 1800,
-  "actionTokenGeneratedByAdminLifespan": 43200,
-  "actionTokenGeneratedByUserLifespan": 300,
-  "oauth2DeviceCodeLifespan": 600,
-  "oauth2DevicePollingInterval": 5,
   "clients": [
     {
       "clientId": "demo-client",
       "name": "Demo Client Application",
-      "description": "Client application that can request tokens for API access",
+      "description": "Client application for app-to-app authentication",
       "enabled": true,
       "clientAuthenticatorType": "client-secret",
       "secret": "demo-client-secret",
-      "standardFlowEnabled": true,
+      "standardFlowEnabled": false,
       "implicitFlowEnabled": false,
-      "directAccessGrantsEnabled": true,
+      "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": true,
       "publicClient": false,
       "protocol": "openid-connect",
       "attributes": {
-        "access.token.lifespan": "300",
-        "client.secret.creation.time": "1642000000"
+        "access.token.lifespan": "300"
       },
-      "redirectUris": [
-        "http://localhost:3000/*",
-        "http://localhost:8081/*",
-        "urn:ietf:wg:oauth:2.0:oob"
-      ],
-      "webOrigins": [
-        "http://localhost:3000",
-        "http://localhost:8081"
-      ],
       "defaultClientScopes": [
         "web-origins",
-        "acr",
-        "profile",
-        "roles",
-        "email"
+        "roles"
       ],
       "optionalClientScopes": [
-        "address",
-        "phone",
-        "offline_access",
-        "microprofile-jwt",
         "api-access"
       ]
     },
@@ -76,8 +48,7 @@
       "protocol": "openid-connect",
       "attributes": {
         "include.in.token.scope": "true",
-        "display.on.consent.screen": "true",
-        "consent.screen.text": "Access to Demo API"
+        "display.on.consent.screen": "false"
       },
       "protocolMappers": [
         {
@@ -90,91 +61,6 @@
             "access.token.claim": "true"
           }
         }
-      ]
-    }
-  ],
-  "roles": {
-    "realm": [
-      {
-        "name": "api-user",
-        "description": "User with API access"
-      },
-      {
-        "name": "api-admin",
-        "description": "Admin with full API access"
-      }
-    ],
-    "client": {
-      "demo-api": [
-        {
-          "name": "read",
-          "description": "Read access to API"
-        },
-        {
-          "name": "write",
-          "description": "Write access to API"
-        },
-        {
-          "name": "admin",
-          "description": "Admin access to API"
-        }
-      ]
-    }
-  },
-  "users": [
-    {
-      "username": "demo-user",
-      "enabled": true,
-      "email": "demo@example.com",
-      "firstName": "Demo",
-      "lastName": "User",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "demo-password",
-          "temporary": false
-        }
-      ],
-      "realmRoles": [
-        "api-user"
-      ],
-      "clientRoles": {
-        "demo-api": [
-          "read",
-          "write"
-        ]
-      }
-    },
-    {
-      "username": "admin-user",
-      "enabled": true,
-      "email": "admin@example.com",
-      "firstName": "Admin",
-      "lastName": "User",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "admin-password",
-          "temporary": false
-        }
-      ],
-      "realmRoles": [
-        "api-admin"
-      ],
-      "clientRoles": {
-        "demo-api": [
-          "read",
-          "write",
-          "admin"
-        ]
-      }
-    }
-  ],
-  "scopeMappings": [
-    {
-      "client": "demo-client",
-      "roles": [
-        "api-user"
       ]
     }
   ]
