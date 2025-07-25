@@ -54,8 +54,8 @@ services:
 
   webclient:
     build:
-      context: ./webclient
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/webclient/Dockerfile
     container_name: webclient
     environment:
       - SERVER_PORT=8082

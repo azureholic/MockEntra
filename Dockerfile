@@ -1,30 +1,37 @@
 # Multi-stage build for demo-api
-FROM eclipse-temurin:11-jdk-jammy AS build
+FROM eclipse-temurin:21-jdk-jammy AS build
 
 WORKDIR /app
 
 # Install Maven
 RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
 
-# Copy pom.xml first for better layer caching
+# Copy parent pom.xml for dependency management
 COPY pom.xml .
 
-# Download dependencies
+# Copy webapi pom.xml
+COPY src/webapi/pom.xml src/webapi/
+
+# Download dependencies (run from webapi directory)  
+WORKDIR /app/src/webapi
 RUN mvn dependency:go-offline -B
 
-# Copy source code
-COPY src src
+# Copy webapi source code
+COPY src/webapi/main src/main
 
-# Build the application
+# Build the application (Spring Boot plugin will automatically repackage)
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM eclipse-temurin:11-jre-jammy
+FROM eclipse-temurin:21-jre-jammy
 
 WORKDIR /app
 
-# Copy the built jar
-COPY --from=build /app/target/*.jar app.jar
+# Install curl for health checks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Copy the built jar (look for the Spring Boot executable JAR)
+COPY --from=build /app/src/webapi/target/*-SNAPSHOT.jar app.jar
 
 # Expose port
 EXPOSE 8081

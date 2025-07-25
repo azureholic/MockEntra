@@ -4,23 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
-        <relativePath/>
+        <groupId>com.example</groupId>
+        <artifactId>mock-entra</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     
-    <groupId>com.example</groupId>
     <artifactId>demo-webclient</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>demo-webclient</name>
-    <description>Web client for Demo API with OAuth token acquisition</description>
-    
-    <properties>
-        <java.version>11</java.version>
-    </properties>
-    
-    <dependencies>
+    <description>Web client for Demo API with OAuth token acquisition</description>    <dependencies>
         <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -70,6 +62,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

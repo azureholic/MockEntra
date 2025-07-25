@@ -15,6 +15,8 @@ public class ApiController {
 
     @GetMapping("/validate")
     public ResponseEntity<Map<String, Object>> validateToken(@AuthenticationPrincipal Jwt jwt) {
+        
+        //this method does not validate the token, it extracts information from it
         Map<String, Object> tokenInfo = new LinkedHashMap<>();
         
         // Extract Issuer
